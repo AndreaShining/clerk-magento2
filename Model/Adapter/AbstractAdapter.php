@@ -130,10 +130,14 @@ abstract class AbstractAdapter
     public function getInfoForItem($resourceItem)
     {
         try {
+
+            $this->setFields(array());
             
             $info = [];
 
             foreach ($this->getFields() as $field) {
+
+
                 if (isset($resourceItem[$field])) {
                     $info[$this->getFieldName($field)] = $this->getAttributeValue($resourceItem, $field);
                 }
@@ -142,7 +146,7 @@ abstract class AbstractAdapter
                     $info[$this->getFieldName($field)] = $this->fieldHandlers[$field]($resourceItem);
                 }
             }
-            
+            $info['id'] = (int)$info['id'];
             return $info;
         } catch (\Exception $e) {
 

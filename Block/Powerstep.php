@@ -51,7 +51,7 @@ class Powerstep extends AbstractProduct
     public function getImageUrl()
     {
         $product = $this->getProduct();
-        return $this->_imageHelper->init($product, 'product_page_image_small')
+        return $this->_imageHelper->init($product, 'product_page_image_large')
             ->setImageFile($product->getImage())
             ->getUrl();
     }

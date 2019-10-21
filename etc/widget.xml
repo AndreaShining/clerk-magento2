@@ -9,6 +9,16 @@
                 <label translate="true">Store</label>
                 <block class="Clerk\Clerk\Block\Adminhtml\Widget\Store"/>
             </parameter>
+            <parameter name="content" xsi:type="text" visible="true">
+                <label translate="true">Contenuto</label>
+            </parameter>
+
+            <parameter name="headline" xsi:type="text" visible="true">
+                <label translate="true">Titolo - Headline</label>
+            </parameter>
+            <parameter name="subtitle" xsi:type="text" visible="true">
+                <label translate="true">Sottotitolo</label>
+            </parameter>
         </parameters>
         <containers>
             <container name="sidebar.main">

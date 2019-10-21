@@ -1,3 +1,12 @@
-<?php
-/** @var \Clerk\Clerk\Block\Widget\Content $block */
-echo $block->getEmbeds();
+<?php /** @var \Clerk\Clerk\Block\Widget\Content $block */ ?>
+
+<div class="clerk-slider block widget dna-widget widget-listing-wrapper">
+    <div class="block-title">
+        <h3 class="border-bottom title_black"><?php echo $this->getHeadline(); ?></h3>
+        <p class="paragraph_gray"><?php echo $this->getSubtitle(); ?></p>
+    </div>
+
+    <div class="block-content">
+        <?php echo $block->getEmbeds(); ?>
+    </div>
+</div>

@@ -55,12 +55,12 @@ class Api
     /**
      * Add product
      */
-    public function addProduct($params)
+    public function addProduct($product)
     {
         try {
             
             $params = [
-                'products' => [$params],
+                'products' => [$product],
             ];
 
             $this->post('product/add', $params);

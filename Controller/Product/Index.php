@@ -22,6 +22,11 @@ class Index extends AbstractAction
     protected $clerk_logger;
 
     /**
+     * @var \Magento\Catalog\Helper\Data
+     */
+    protected $taxHelper;
+
+    /**
      * @var ProductAdapter
      */
     protected $productAdapter;
@@ -50,8 +55,7 @@ class Index extends AbstractAction
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|void
-     * @throws \Magento\Framework\Exception\FileSystemException
+     *
      */
     public function execute()
     {
@@ -83,11 +87,9 @@ class Index extends AbstractAction
 
                                 $price = $this->taxHelper->getTaxPrice($associatedProduct, $associatedProduct->getFinalPrice(), true);
 
-
                             } elseif ($price > $associatedProduct->getPrice()) {
 
                                 $price = $this->taxHelper->getTaxPrice($associatedProduct, $associatedProduct->getFinalPrice(), true);
-                                
 
                             }
 

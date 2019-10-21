@@ -5,6 +5,7 @@ namespace Clerk\Clerk\Model\Adapter;
 use Clerk\Clerk\Controller\Logger\ClerkLogger;
 use Clerk\Clerk\Model\Config;
 use Clerk\Clerk\Helper\Image;
+use Magento\Catalog\Helper\ImageFactory;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\ManagerInterface;
@@ -29,6 +30,12 @@ class Product extends AbstractAdapter
      * @var Image
      */
     protected $imageHelper;
+
+    /**
+     * @var ImageFactory
+     */
+    protected $helperFactory;
+
 
     /**
      * @var string
@@ -56,10 +63,12 @@ class Product extends AbstractAdapter
         CollectionFactory $collectionFactory,
         StoreManagerInterface $storeManager,
         Image $imageHelper,
+        ImageFactory $helperFactory,
         ClerkLogger $Clerklogger
     )
     {
         $this->clerk_logger = $Clerklogger;
+        $this->helperFactory = $helperFactory;
         $this->imageHelper = $imageHelper;
         parent::__construct($scopeConfig, $eventManager, $storeManager, $collectionFactory, $Clerklogger);
     }
@@ -194,9 +203,21 @@ class Product extends AbstractAdapter
 
             //Add image fieldhandler
             $this->addFieldHandler('image', function ($item) {
-                $imageUrl = $this->imageHelper->getUrl($item);
-
+                $helper = $this->helperFactory->create();
+                $imageUrl = $helper->init($item, 'category_page_grid')->setImageFile($item->getSmallImage())->resize('315','353')->getUrl();
                 return $imageUrl;
+            });
+
+            //Add thumbnail fieldhandler
+            $this->addFieldHandler('thumbnail', function ($item) {
+                $helper = $this->helperFactory->create();
+                $imageUrl = $helper->init($item, 'category_page_grid-hover')->setImageFile($item->getThumbnail())->resize('315','353')->getUrl();
+                return $imageUrl;
+            });
+
+            //Add new collection fieldhandler
+            $this->addFieldHandler('new_collection', function ($item) {
+                return (bool)$item->getNewCollection();
             });
 
             //Add url fieldhandler
@@ -220,10 +241,34 @@ class Product extends AbstractAdapter
             //Add on_sale fieldhandler
             $this->addFieldHandler('on_sale', function ($item) {
                 try {
+
+                    //Fix for configurable products
+                    if ($item->getTypeId() === Configurable::TYPE_CODE) {
+                        $price = $item->getPriceInfo()->getPrice('regular_price')->getValue();
+                    }else{
+                        $price = $item->getPrice();
+                    }
                     $finalPrice = $item->getFinalPrice();
-                    $price = $item->getPrice();
+
 
                     return $finalPrice < $price;
+                } catch (\Exception $e) {
+                    return false;
+                }
+            });
+
+            //Add categories fieldhandler
+            $this->addFieldHandler('discount_percentage', function ($item) {
+                try {
+                    $finalPrice = $item->getFinalPrice();
+                    //Fix for configurable products
+                    if ($item->getTypeId() === Configurable::TYPE_CODE) {
+                        $price = $item->getPriceInfo()->getPrice('regular_price')->getValue();
+                    }else{
+                        $price = $item->getPrice();
+                    }
+                    if($finalPrice < $price)
+                        return round(($price-$finalPrice)/$price*100);
                 } catch (\Exception $e) {
                     return false;
                 }
@@ -234,6 +279,9 @@ class Product extends AbstractAdapter
             $this->clerk_logger->error('Getting Field Handlers Error', ['error' => $e->getMessage()]);
 
         }
+
+
+
     }
 
     /**
@@ -252,12 +300,15 @@ class Product extends AbstractAdapter
                 'price',
                 'list_price',
                 'image',
+                'thumbnail',
+                'new_collection',
                 'url',
                 'categories',
                 'brand',
                 'sku',
                 'age',
-                'on_sale'
+                'on_sale',
+                'discount_percentage'
             ];
 
             $additionalFields = $this->scopeConfig->getValue(Config::XML_PATH_PRODUCT_SYNCHRONIZATION_ADDITIONAL_FIELDS);
