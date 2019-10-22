@@ -17,10 +17,10 @@
                 <label translate="true">Titolo - Headline</label>
             </parameter>
             <parameter name="subtitle" xsi:type="text" visible="true">
-                <label translate="true">Sottotitolo</label>
+                <label translate="true">Sotto titolo</label>
             </parameter>
         </parameters>
-        <containers>
+        <!--<containers>
             <container name="sidebar.main">
                 <template name="default" value="list_default" />
                 <template name="names_only" value="list_names" />
@@ -35,7 +35,7 @@
                 <template name="names_only" value="list_names" />
                 <template name="images_only" value="list_images" />
             </container>
-        </containers>
+        </containers>-->
     </widget>
 </widgets>
 
