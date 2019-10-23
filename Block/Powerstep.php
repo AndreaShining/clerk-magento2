@@ -6,9 +6,41 @@ use Clerk\Clerk\Model\Config;
 use Magento\Catalog\Block\Product\AbstractProduct;
 use Magento\Catalog\Block\Product\Context;
 use Magento\Catalog\Model\Product;
+use Magento\Checkout\Model\Cart as CustomerCart;
 
 class Powerstep extends AbstractProduct
 {
+
+    protected $cart;
+    protected $priceHelper;
+
+
+    public function __construct(
+        CustomerCart $cart,
+        \Magento\Framework\Pricing\Helper\Data $priceHelper,
+        \Magento\Catalog\Block\Product\Context $context,
+        array $data = []
+    ) {
+        $this->cart = $cart;
+        $this->priceHelper = $priceHelper;
+        parent::__construct($context);
+    }
+
+    public function getProductQtyCustom(){
+
+        $counting = $this->cart->getSummaryQty();
+        return $counting;
+    }
+
+
+    public function getSubtotalHtmlCustom()
+    {
+        $totals = $this->cart->getQuote()->getTotals();
+        $subtotal = $totals['subtotal']['value'];
+        $subtotal = $this->priceHelper->currency($subtotal, true, false);
+        return $subtotal;
+    }
+
     /**
      * Get Cart URL
      *
@@ -51,7 +83,7 @@ class Powerstep extends AbstractProduct
     public function getImageUrl()
     {
         $product = $this->getProduct();
-        return $this->_imageHelper->init($product, 'product_page_image_large')
+        return $this->_imageHelper->init($product, 'product_page_image_small')
             ->setImageFile($product->getImage())
             ->getUrl();
     }

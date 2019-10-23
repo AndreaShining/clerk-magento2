@@ -7,6 +7,12 @@
                     <argument name="type" xsi:type="string">product</argument>
                 </action>
             </block>
+
+            <block class="Clerk\Clerk\Block\Widget\Content" name="clerk.product2.widget" template="Clerk_Clerk::widget.phtml" after="clerk.product.widget">
+                <action method="setType">
+                    <argument name="type" xsi:type="string">product2</argument>
+                </action>
+            </block>
         </referenceContainer>
     </body>
 </page>

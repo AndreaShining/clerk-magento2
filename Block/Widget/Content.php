@@ -51,6 +51,10 @@ class Content extends \Magento\Framework\View\Element\Template implements \Magen
             $contents = $this->getProductContents();
         }
 
+        if ($this->getType() === 'product2') {
+            $contents = 'product-page-crossell';
+        }
+
         $output = '';
 
         foreach (explode(',', $contents) as $content) {
@@ -140,6 +144,11 @@ class Content extends \Magento\Framework\View\Element\Template implements \Magen
         }
 
         if ($this->getType() === 'product') {
+            $spanAttributes['data-products'] = json_encode([$this->getCurrentProduct()]);
+            $spanAttributes['data-template'] = '@' . $this->getProductContents();
+        }
+
+        if ($this->getType() === 'product2') {
             $spanAttributes['data-products'] = json_encode([$this->getCurrentProduct()]);
             $spanAttributes['data-template'] = '@' . $this->getProductContents();
         }
@@ -264,6 +273,10 @@ class Content extends \Magento\Framework\View\Element\Template implements \Magen
         }
 
         if ($this->getType() === 'product') {
+            $spanAttributes['data-products'] = json_encode([$this->getCurrentProduct()]);
+        }
+
+        if ($this->getType() === 'product2') {
             $spanAttributes['data-products'] = json_encode([$this->getCurrentProduct()]);
         }
 

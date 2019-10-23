@@ -5,7 +5,7 @@
     </head>
     <body>
         <referenceContainer name="content">
-            <block class="Clerk\Clerk\Block\Powerstep" name="clerk.cart.added" template="Clerk_Clerk::added.phtml"/>
+            <block class="Clerk\Clerk\Block\Powerstep" name="clerk.cart.added" template="Clerk_Clerk::added.phtml" cacheable="false"/>
         </referenceContainer>
     </body>
 </page>
